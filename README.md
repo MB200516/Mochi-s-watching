@@ -1,55 +1,22 @@
-# Oogway's Watching 🐢👀
+So real progress when doing DSA comes from solving questions yourself and get your brain actually working. However temptations are typically too sweet to resist and you might find yourself on the solutions tab after spending 2 seconds on the problem.
 
-Stop peeking at solutions before you've actually tried. Set a timer per question
-(20 min – 3 hr), and if you try to sneak into the **Solutions**, **Editorial**,
-or **Discuss** tab before it's up, you get a full-screen lock screen where
-Oogway, a wise old pixel tortoise, catches you red-handed.
+I struggled with this issue so for my own use I decided to build an extension that locks out the solution and editorial tab for a period minimum 20 mins max 3 hours based on how much time I think it would take me to solve a problem. So for that particular time I cannot view the solutions at all and try and solve it myself.
+<img width="1911" height="636" alt="image" src="https://github.com/user-attachments/assets/edaec7ff-3da3-437b-b5d0-5be2de9df11c" />
+<img width="395" height="364" alt="image" src="https://github.com/user-attachments/assets/54af4807-4779-4099-b495-0929501fc9fd" />
+when you click on solutions or editorial 
+<img width="1915" height="958" alt="image" src="https://github.com/user-attachments/assets/4b2a2df0-74c1-415d-ae9e-fd62c4dea8d1" />
 
-## What it does
+it does have an early release option but since that might also be a possible way out and you get stuck in the same loop I am trying to add another flow where if the timer's On and you have a successful submission (Accepted) the timer will exit on it's own otherwise the solutions would still be locked till the end. Working on this one for now 
 
-- **Per-question timer** — set anywhere from 20 minutes to 3 hours for the
-  problem you're currently on.
-- **Full-screen block** — if you navigate to that problem's Solutions,
-  Editorial, or Discuss page while a session is running, a full-viewport
-  pixel-art lock screen covers everything: a "you got caught" speech bubble,
-  Oogway giving you a stern look, a live countdown, and a progress bar. A
-  button also lets you trigger real browser Fullscreen mode.
-- **Floating widget** — a small retro window sits in the corner of every
-  problem page showing your countdown so you always know how much longer you
-  need to hang in there.
-- **Oogway, the pixel tortoise** — idle (eyes closed, meditating), studying
-  (little reading glasses), and "I caught you" (stern brow, wide eyes) moods,
-  all hand-drawn as crisp pixel-grid SVGs (see `pixelart.js`).
-- **Notification** when your timer ends.
-- **Give up early** is possible (this is a discipline tool, not a prison) but
-  it always asks you to confirm first.
+## To use:
+1. Clone the repo onto your local machine.
+2. Go to chrome or brave or any browser of your choice and open extensions.
+3. In extensions page you'll need to turn ON developer mode.
+4. Once dev mode is on click on load unpacked and select the cloned repo from your device and you're good to go!
+5. Use it from your extension list whenever you open leetcode (trying to add an automatic popup if possible like when you open a problem it pops up automatically) -------> Select time duration minimum is 20 mins max 3 hours and start solving ! -----> try not to peek Oogway will definitely catch you.
 
-## Install (unpacked, for personal use)
-
-1. Download/unzip this folder somewhere permanent (don't delete it after —
-   Chrome loads the extension directly from these files).
-2. Open `chrome://extensions` in Chrome (or any Chromium browser — Edge,
-   Brave, etc.).
-3. Turn on **Developer mode** (top-right toggle).
-4. Click **Load unpacked** and select the `leetcode-focus-lock` folder.
-5. Pin the extension (puzzle-piece icon in the toolbar → pin) so it's easy to
-   reach.
-
-## How to use it
-
-1. Open any problem on `leetcode.com/problems/...`.
-2. Click the extension icon (or use the widget in the bottom-right corner of
-   the page), pick a time with the quick presets or the +/- stepper, and hit
-   **Start Focus Session**.
-3. Solve! The widget shows your countdown the whole time.
-4. If you click into Solutions / Editorial / Discuss before time's up, Oogway
-   catches you and the lock screen takes over the whole tab until the timer
-   runs out.
-5. When time's up you get a notification and the lock lifts automatically.
 
 ## Project structure
-
-```
 leetcode-focus-lock/
 ├── manifest.json      # Manifest V3 config
 ├── background.js      # Service worker: owns session state + alarms
@@ -59,21 +26,3 @@ leetcode-focus-lock/
 ├── pixelart.js           # Shared pixel-mascot SVG renderer ("Oogway")
 ├── icons/                # Generated pixel-art toolbar/store icons
 └── README.md
-```
-
-## Notes / limitations
-
-- Chrome's Fullscreen API requires an actual user click to trigger, so true
-  fullscreen is offered as a button on the lock screen rather than forced
-  automatically — browsers block auto-fullscreen for good security reasons.
-  The CSS overlay itself still fully covers the tab regardless.
-- This only blocks LeetCode's own Solutions/Editorial/Discuss tabs in this
-  browser profile — it's meant as a friction/commitment device, not a strict
-  parental-control lock. (Disabling the extension entirely is always possible
-  in Chrome; the goal is to remove the *easy, one-click* temptation.)
-- Sessions are tracked per problem slug, so switching problems mid-session
-  doesn't dodge the timer for the one you're actually locked into — but each
-  problem can have its own independent session.
-- Oogway here is an original pixel-tortoise mascot inspired by the general
-  "wise old turtle" archetype, not a reproduction of any specific copyrighted
-  character design.
