@@ -1,0 +1,292 @@
+/* Retro-terminal look built from system monospace, since external fonts
+   can run into the host page's own CSP. Uppercase + wide tracking + a
+   stepped text-shadow fakes a pixel-font feel without extra network calls. */
+
+#flx-widget, #flx-overlay, #flx-widget *, #flx-overlay * {
+  all: revert;
+  box-sizing: border-box;
+  font-family: "Courier New", ui-monospace, monospace;
+}
+
+#flx-widget {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 2147483000;
+  width: 260px;
+  filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.35));
+}
+
+.flx-win {
+  background: #16213e;
+  border: 3px solid #0a4a4a;
+  image-rendering: pixelated;
+}
+
+.flx-titlebar {
+  background: #0a4a4a;
+  color: #2be8c8;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  cursor: default;
+}
+
+.flx-dot {
+  width: 6px;
+  height: 6px;
+  background: #2be8c8;
+  display: inline-block;
+}
+
+.flx-titletext {
+  flex: 1;
+  text-align: center;
+  color: #eaeaea;
+}
+
+.flx-min {
+  background: #16213e;
+  color: #eaeaea;
+  border: 2px solid #2be8c8;
+  cursor: pointer;
+  line-height: 1;
+  padding: 1px 6px;
+  font-size: 11px;
+}
+
+.flx-collapsed .flx-body { display: none; }
+
+.flx-body {
+  padding: 12px;
+  color: #eaeaea;
+}
+
+.flx-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.flx-mascot svg { display: block; image-rendering: pixelated; }
+
+.flx-h {
+  color: #ffd23f;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.flx-problem {
+  font-size: 12px;
+  color: #eaeaea;
+  margin-top: 2px;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flx-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.flx-chip {
+  background: #0a4a4a;
+  color: #2be8c8;
+  border: 2px solid #2be8c8;
+  font-size: 11px;
+  padding: 3px 6px;
+  cursor: pointer;
+}
+.flx-chip:hover { background: #2be8c8; color: #0a4a4a; }
+
+.flx-custom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: #eaeaea;
+}
+
+.flx-step {
+  background: #16213e;
+  border: 2px solid #ff6f91;
+  color: #ff6f91;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.flx-step:hover { background: #ff6f91; color: #16213e; }
+
+.flx-mins {
+  font-size: 18px;
+  color: #ffd23f;
+  min-width: 28px;
+  text-align: center;
+}
+.flx-unit { font-size: 10px; color: #eaeaea; }
+
+.flx-start {
+  width: 100%;
+  background: #ff6f91;
+  color: #16213e;
+  border: 3px solid #16213e;
+  box-shadow: 3px 3px 0 #0a4a4a;
+  padding: 8px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.flx-start:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 #0a4a4a; }
+.flx-start:active { transform: translate(3px, 3px); box-shadow: none; }
+
+.flx-hint {
+  margin-top: 6px;
+  font-size: 10px;
+  color: #7f8bab;
+  text-align: center;
+}
+
+.flx-countdown {
+  font-size: 26px;
+  text-align: center;
+  color: #ffd23f;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.flx-giveup {
+  width: 100%;
+  background: transparent;
+  border: 2px dashed #7f8bab;
+  color: #7f8bab;
+  padding: 5px;
+  font-size: 10px;
+  cursor: pointer;
+  text-transform: lowercase;
+}
+.flx-giveup:hover { color: #ff6f91; border-color: #ff6f91; }
+
+/* ---------------- Full screen lock overlay ---------------- */
+
+#flx-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(255, 196, 84, 0.28) 0%, rgba(255, 196, 84, 0) 55%),
+    repeating-linear-gradient(90deg, #16241a 0px, #16241a 20px, #1c2e20 20px, #1c2e20 26px),
+    #101a12;
+}
+#flx-overlay.flx-show { display: flex; }
+
+.flx-lockcard {
+  position: relative;
+  background: #16213e;
+  border: 4px solid #ffd23f;
+  box-shadow: 8px 8px 0 rgba(0,0,0,0.5);
+  padding: 32px 40px;
+  text-align: center;
+  max-width: 420px;
+  color: #eaeaea;
+}
+
+.flx-speech {
+  display: inline-block;
+  background: #eaeaea;
+  color: #16213e;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  padding: 6px 12px;
+  margin-bottom: 10px;
+  border: 2px solid #16213e;
+  position: relative;
+}
+.flx-speech::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  transform: translateX(-50%);
+  border-width: 8px 7px 0 7px;
+  border-style: solid;
+  border-color: #eaeaea transparent transparent transparent;
+}
+
+.flx-mascot-big svg { display: block; margin: 0 auto 12px; image-rendering: pixelated; }
+
+.flx-lock-title {
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: #ff6f91;
+  margin-bottom: 8px;
+  text-shadow: 2px 2px 0 #4a2600;
+}
+
+.flx-lock-sub {
+  font-size: 13px;
+  color: #b9c2e0;
+  margin-bottom: 18px;
+}
+
+.flx-lock-countdown {
+  font-size: 40px;
+  color: #ffd23f;
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+}
+
+.flx-lock-bar {
+  height: 14px;
+  border: 2px solid #ffd23f;
+  background: #0a0a16;
+  margin-bottom: 22px;
+}
+.flx-lock-bar-fill {
+  height: 100%;
+  background: repeating-linear-gradient(90deg, #2be8c8 0 6px, #16213e 6px 8px);
+}
+
+.flx-lock-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.flx-back, .flx-fs {
+  border: 3px solid #16213e;
+  padding: 10px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.flx-back {
+  background: #2be8c8;
+  color: #0a0a16;
+  box-shadow: 3px 3px 0 #0a4a4a;
+}
+.flx-back:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 #0a4a4a; }
+
+.flx-fs {
+  background: transparent;
+  border-color: #ffd23f;
+  color: #ffd23f;
+}
+.flx-fs:hover { background: #ffd23f; color: #16213e; }

@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Oogway's Watching",
+  "version": "1.0.0",
+  "description": "Set a per-question timer (20 min - 3 hr), and get locked out of LeetCode solutions/editorial/discuss with a full-screen block until it's done. Oogway, the wise pixel tortoise, keeps you honest.",
+  "permissions": ["storage", "alarms", "tabs", "notifications"],
+  "host_permissions": ["https://leetcode.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/*"],
+      "js": ["pixelart.js", "content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com;"
+  }
+}
