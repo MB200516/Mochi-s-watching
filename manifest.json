@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Oogway's Watching",
-  "version": "1.0.0",
-  "description": "Set a per-question timer (20 min - 3 hr), and get locked out of LeetCode solutions/editorial/discuss with a full-screen block until it's done. Oogway, the wise pixel tortoise, keeps you honest.",
+  "name": "Mochi is Watching",
+  "version": "1.1.0",
+  "description": "Set a per-question timer (20 min - 3 hr), and get locked out of LeetCode solutions/editorial/discuss with a full-screen block until it's done. Mochi, the pixel study cat, keeps you honest \u2014 with pastel day skies and a navy moonlit night mode.",
   "permissions": ["storage", "alarms", "tabs", "notifications"],
   "host_permissions": ["https://leetcode.com/*"],
   "background": {
@@ -24,9 +24,15 @@
   "content_scripts": [
     {
       "matches": ["https://leetcode.com/*"],
-      "js": ["pixelart.js", "content.js"],
+      "js": ["content.js"],
       "css": ["content.css"],
       "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/*"],
+      "matches": ["https://leetcode.com/*"]
     }
   ],
   "content_security_policy": {

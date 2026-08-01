@@ -1,10 +1,29 @@
 /**
  * content.js — runs on leetcode.com
  * Renders:
- *  - a small floating pixel widget (set a timer / see countdown)
+ *  - a small floating pixel widget (set a timer / see countdown),
+ *    with Mochi the study cat perched on top of it
  *  - a full-screen lock overlay when the user tries to peek at
  *    solutions / editorial / discuss while a session is active
+ * Both switch between a pastel pink/purple "day" sky and a navy
+ * "night" sky with a moon, based on the local time of day.
  */
+
+function currentTheme() {
+  const hour = new Date().getHours();
+  return hour >= 6 && hour < 18 ? "day" : "night";
+}
+
+function applyTheme(el) {
+  if (el) el.setAttribute("data-theme", currentTheme());
+}
+
+function assetURL(name) {
+  return chrome.runtime.getURL(`assets/${name}`);
+}
+
+const CAT_IMG = assetURL("cat.png");
+const MOON_IMG = assetURL("moon.png");
 
 const PRESETS_MIN = [20, 30, 45, 60, 90, 120, 180];
 const MIN_MINUTES = 20;
@@ -55,17 +74,24 @@ function ensureWidget() {
   widgetEl = document.createElement("div");
   widgetEl.id = "flx-widget";
   widgetEl.innerHTML = `
+    <div class="flx-mascot-perch"><img src="${CAT_IMG}" alt="Mochi"></div>
     <div class="flx-win">
       <div class="flx-titlebar">
         <span class="flx-dot"></span><span class="flx-dot"></span><span class="flx-dot"></span>
-        <span class="flx-titletext">OOGWAY'S WATCHING</span>
-        <button class="flx-min" title="minimize">_</button>
+        <span class="flx-titletext">MOCHI IS WATCHING</span>
+        <button class="flx-min" type="button" title="minimize">_</button>
       </div>
       <div class="flx-body"></div>
     </div>`;
   document.documentElement.appendChild(widgetEl);
-  widgetEl.querySelector(".flx-min").addEventListener("click", () => {
-    widgetEl.classList.toggle("flx-collapsed");
+  applyTheme(widgetEl);
+  const minBtn = widgetEl.querySelector(".flx-min");
+  minBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const collapsed = widgetEl.classList.toggle("flx-collapsed");
+    minBtn.textContent = collapsed ? "\u25a2" : "_";
+    minBtn.title = collapsed ? "restore" : "minimize";
   });
   return widgetEl;
 }
@@ -73,13 +99,8 @@ function ensureWidget() {
 function renderWidgetIdle(slug, title) {
   const body = widgetEl.querySelector(".flx-body");
   body.innerHTML = `
-    <div class="flx-row">
-      <div class="flx-mascot">${window.oogwaySVG("idle", 56)}</div>
-      <div class="flx-copy">
-        <div class="flx-h">Lock in on:</div>
-        <div class="flx-problem">${title}</div>
-      </div>
-    </div>
+    <div class="flx-h">Lock in on:</div>
+    <div class="flx-problem">${title}</div>
     <div class="flx-presets"></div>
     <div class="flx-custom">
       <button class="flx-step" data-d="-5">-5</button>
@@ -115,20 +136,17 @@ function renderWidgetIdle(slug, title) {
 }
 
 function renderWidgetActive(session, blocked) {
+  const perchImg = widgetEl.querySelector(".flx-mascot-perch img");
+  perchImg.classList.toggle("flx-alert", !!blocked);
   const body = widgetEl.querySelector(".flx-body");
   body.innerHTML = `
-    <div class="flx-row">
-      <div class="flx-mascot">${window.oogwaySVG(blocked ? "caught" : "focus", 56)}</div>
-      <div class="flx-copy">
-        <div class="flx-h">${blocked ? "NO PEEKING!" : "Focus session running"}</div>
-        <div class="flx-problem">${session.title}</div>
-      </div>
-    </div>
+    <div class="flx-h">${blocked ? "NO PEEKING!" : "Focus session running"}</div>
+    <div class="flx-problem">${session.title}</div>
     <div class="flx-countdown">${fmtTime(session.endTime - Date.now())}</div>
     <button class="flx-giveup">give up early</button>
   `;
   body.querySelector(".flx-giveup").addEventListener("click", async () => {
-    if (confirm("Really give up? Oogway believes in you. This ends your focus session early.")) {
+    if (confirm("Really give up? Mochi believes in you. This ends your focus session early.")) {
       const slug = getSlug();
       await sendMsg({ type: "CANCEL_SESSION", slug });
       refresh(true);
@@ -143,16 +161,17 @@ function ensureOverlay() {
   overlayEl = document.createElement("div");
   overlayEl.id = "flx-overlay";
   overlayEl.innerHTML = `
+    <img class="flx-moon" src="${MOON_IMG}" alt="">
     <div class="flx-lockcard">
       <div class="flx-speech">"I caught you."</div>
-      <div class="flx-mascot-big"></div>
-      <div class="flx-lock-title">OOGWAY IS WATCHING</div>
+      <div class="flx-mascot-big"><img src="${CAT_IMG}" alt="Mochi"></div>
+      <div class="flx-lock-title">MOCHI IS WATCHING</div>
       <div class="flx-lock-sub">Solutions stay sealed until your timer runs out. Go back and try again &mdash; your future self will thank you.</div>
       <div class="flx-lock-countdown">00:00</div>
       <div class="flx-lock-bar"><div class="flx-lock-bar-fill"></div></div>
       <div class="flx-lock-buttons">
-        <button class="flx-back">BACK TO PROBLEM</button>
-        <button class="flx-fs">ENTER FULLSCREEN LOCK</button>
+        <button class="flx-back" type="button">BACK TO PROBLEM</button>
+        <button class="flx-fs" type="button">ENTER FULLSCREEN LOCK</button>
       </div>
     </div>`;
   document.documentElement.appendChild(overlayEl);
@@ -168,8 +187,8 @@ function ensureOverlay() {
 
 function showOverlay(session) {
   ensureOverlay();
+  applyTheme(overlayEl);
   overlayEl.classList.add("flx-show");
-  overlayEl.querySelector(".flx-mascot-big").innerHTML = window.oogwaySVG("caught", 140);
   document.documentElement.style.overflow = "hidden";
   const totalMs = session.duration * 1000;
   const remainMs = session.endTime - Date.now();
@@ -198,6 +217,7 @@ async function refresh(force) {
   }
 
   ensureWidget();
+  applyTheme(widgetEl);
   widgetEl.style.display = "";
 
   const { session } = await sendMsg({ type: "GET_SESSION", slug });

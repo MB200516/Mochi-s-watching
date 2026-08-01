@@ -4,6 +4,17 @@ const MAX_MINUTES = 180;
 const PROBLEM_SLUG_RE = /\/problems\/([^/]+)/;
 
 const app = document.getElementById("app");
+const perch = document.querySelector(".mascot-perch");
+
+function currentTheme() {
+  const hour = new Date().getHours();
+  return hour >= 6 && hour < 18 ? "day" : "night";
+}
+
+function setMascot() {
+  // Mochi is a single static photo in the popup (no caught/blocked mood
+  // happens here — that's only ever shown in the full-screen page overlay).
+}
 
 function sendMsg(msg) {
   return new Promise((resolve) => chrome.runtime.sendMessage(msg, resolve));
@@ -19,26 +30,22 @@ function fmtTime(ms) {
 }
 
 function renderNoProblem() {
+  setMascot("idle");
   app.innerHTML = `
     <div class="head">
-      <div class="mascot">${window.oogwaySVG("idle", 64)}</div>
-      <div>
-        <div class="headline">OOGWAY AWAITS</div>
-        <div class="subline">Open a LeetCode problem to start a focus session.</div>
-      </div>
+      <div class="headline">MOCHI AWAITS</div>
+      <div class="subline">Open a LeetCode problem to start a focus session.</div>
     </div>
   `;
 }
 
 function renderSetup(slug, title) {
+  setMascot("idle");
   let minutes = 45;
   app.innerHTML = `
     <div class="head">
-      <div class="mascot">${window.oogwaySVG("idle", 64)}</div>
-      <div>
-        <div class="headline">LOCK IN</div>
-        <div class="subline">no peeking till the timer's done</div>
-      </div>
+      <div class="headline">LOCK IN</div>
+      <div class="subline">no peeking till the timer's done</div>
     </div>
     <div class="problem-title">${title}</div>
     <div class="presets"></div>
@@ -83,13 +90,11 @@ let tickHandle = null;
 
 function renderActive(session, slug) {
   if (tickHandle) clearInterval(tickHandle);
+  setMascot("focus");
   app.innerHTML = `
     <div class="head">
-      <div class="mascot">${window.oogwaySVG("focus", 64)}</div>
-      <div>
-        <div class="headline">FOCUSING</div>
-        <div class="subline">patience, young coder &mdash; solve it yourself first</div>
-      </div>
+      <div class="headline">FOCUSING</div>
+      <div class="subline">patience &mdash; solve it yourself first you'll start loving it!</div>
     </div>
     <div class="problem-title">${session.title}</div>
     <div class="countdown">--:--</div>
@@ -110,7 +115,7 @@ function renderActive(session, slug) {
   tickHandle = setInterval(tick, 1000);
 
   app.querySelector(".giveup-btn").addEventListener("click", async () => {
-    if (confirm("Really give up? Oogway believes in you. This ends your focus session early.")) {
+    if (confirm("Really give up? Mochi believes in you. This ends your focus session early.")) {
       await sendMsg({ type: "CANCEL_SESSION", slug });
       boot();
     }
@@ -118,6 +123,8 @@ function renderActive(session, slug) {
 }
 
 async function boot() {
+  document.body.setAttribute("data-theme", currentTheme());
+
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const url = tab?.url || "";
   const match = url.match(PROBLEM_SLUG_RE);
