@@ -1,12 +1,4 @@
-/* Kawaii pastel theme with real pixel-art sky backgrounds + a real cat mascot.
-   IMPORTANT cascade note: `all: revert` is applied ONLY to the two root
-   containers (#flx-widget / #flx-overlay), never to their descendants.
-   An earlier version applied it via "#flx-widget *" too, and because that
-   compound selector carries the #flx-widget ID's specificity, it was
-   silently beating plain class rules like .flx-titlebar / .flx-min further
-   down this file (ID specificity > class specificity, regardless of source
-   order) — that's what broke the minimize button. Descendants below only
-   get a plain, non-competing box-sizing/font-family reset. */
+
 
 #flx-widget, #flx-overlay {
   all: revert;
