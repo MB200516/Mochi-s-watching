@@ -1,13 +1,4 @@
-/**
- * content.js — runs on leetcode.com
- * Renders:
- *  - a small floating pixel widget (set a timer / see countdown),
- *    with Mochi the study cat perched on top of it
- *  - a full-screen lock overlay when the user tries to peek at
- *    solutions / editorial / discuss while a session is active
- * Both switch between a pastel pink/purple "day" sky and a navy
- * "night" sky with a moon, based on the local time of day.
- */
+
 
 function currentTheme() {
   const hour = new Date().getHours();
