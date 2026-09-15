@@ -20,7 +20,7 @@ it does have an early release option but since that might also be a possible way
   progress bar. A button also lets you trigger real browser Fullscreen mode(this ones kinda flawed as of now).
 - **Floating widget** — a small pixel window sits in the corner of every
   problem page with Mochi perched right on top of it, showing your countdown.
-- **Day / night theme ** — the whole UI switches automatically
+- **Day / night theme** — the whole UI switches automatically
   based on your local time . I had fun with this one
 - **Black-outline "sticker" buttons** — white/pastel fill, black border,
   black text (auto-inverts to cream-on-navy for the night theme so it stays
@@ -56,5 +56,3 @@ leetcode-focus-lock/
 - Sessions are tracked per problem slug, so switching problems mid-session
   doesn't dodge the timer for the one you're actually locked into — but each
   problem can have its own independent session.
-=======
->>>>>>> b50909ec9ee7e7ebeb13eeeb8088f5efa01ce7b1
